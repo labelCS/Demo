@@ -20,8 +20,6 @@ public class LocationModel
 
     private String userID;
 
-    private MapsModel maps;
-
     public String getIdType()
     {
         return idType;
@@ -90,20 +88,6 @@ public class LocationModel
     public void setUserID(String userID)
     {
         this.userID = userID;
-    }
-
-    /**
-     * @return the maps
-     */
-    public MapsModel getMaps() {
-        return maps;
-    }
-
-    /**
-     * @param maps the maps to set
-     */
-    public void setMaps(MapsModel maps) {
-        this.maps = maps;
     }
 
     /**

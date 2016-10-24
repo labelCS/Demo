@@ -9,12 +9,10 @@
 package com.sva.test.dao;
 
 import java.math.BigDecimal;
-import java.util.List;
 import javax.annotation.Resource;
 import org.junit.Test;
 import com.sva.dao.AmqpDao;
 import com.sva.model.LocationModel;
-import com.sva.model.SvaModel;
 import org.junit.Assert;
 
 /**   
@@ -89,11 +87,5 @@ public class AmqpDaoTest extends BasicDaoTest {
         long timeLocal = System.currentTimeMillis();
         int result = amqpDao.svaGeofencing(idType, userId, mapId, zoneId, zoneEvent, timestamp, timeLocal);
         Assert.assertEquals("结果为1",1, result);
-    }
-
-    @Test
-    public void getActiveSvaTest(){
-        List<SvaModel> result = amqpDao.getActiveSva();
-        Assert.assertEquals("结果为1",1, result.size());
     }
 }

@@ -23,7 +23,6 @@ import org.apache.qpid.QpidException;
 import org.apache.qpid.client.AMQAnyDestination;
 import org.apache.qpid.client.AMQConnection;
 import org.apache.qpid.url.URLSyntaxException;
-import com.sva.common.ConvertUtil;
 import com.sva.common.conf.GlobalConf;
 import com.sva.dao.AmqpDao;
 import com.sva.model.LocationModel;
@@ -213,7 +212,7 @@ public class AmqpThread extends Thread {
             // 全量订阅
             if(type == 0){
                 // 获取当天的日期字符串
-                String tableName = "location" + ConvertUtil.dateFormat(loc.getLong("Timestamp"), "yyyyMMdd");
+                String tableName = "location";
                 // 执行数据库保存逻辑
                 dao.saveAmqpData(lm,tableName);
                 
@@ -250,7 +249,7 @@ public class AmqpThread extends Thread {
             }
             
             // 获取当天的日期字符串
-            String tableName = "location" + ConvertUtil.dateFormat(loc.getLong("Timestamp"), "yyyyMMdd");
+            String tableName = "location";
             // 执行数据库保存逻辑
             dao.saveAmqpData(lm,tableName);
             

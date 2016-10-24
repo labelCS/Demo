@@ -253,7 +253,7 @@ public class SubscriptionService extends HttpsService {
      * @return 
      */
     public boolean checkDataIsFreash(){
-        int result = locDao.findCurrentUser();
+        int result = locDao.findCurrentUser(GlobalConf.floorNo, 10*1000);
         if(result > 0){
             return true;
         }else{

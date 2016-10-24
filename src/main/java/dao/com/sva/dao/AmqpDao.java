@@ -22,9 +22,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
 import com.sva.model.LocationModel;
-import com.sva.model.SvaModel;
 
 /**   
  * @ClassName:  AmqpDao   
@@ -90,11 +88,4 @@ public interface AmqpDao {
     public int svaGeofencing(@Param("idType")String idType,@Param("userId")String userId,@Param("mapId")String mapId,
             @Param("zoneId")String zoneId,@Param("zoneEvent")String zoneEvent, @Param("timestamp")String timestamp, 
             @Param("timeLocal")long timeLocal);
-    
-    /** 
-     * @Title: getActiveSva 
-     * @Description: 获取启动状态的sva信息 
-     * @return 
-     */
-    public List<SvaModel> getActiveSva();
 }

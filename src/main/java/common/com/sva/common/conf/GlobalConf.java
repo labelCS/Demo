@@ -29,6 +29,9 @@ public abstract class GlobalConf
     @Value("${sva_id_type}")
     public static String idType;
     
+    @Value("${sva_id_type}")
+    public static String floorNo;
+    
     /**
      * 对接SVA数据线程
      */

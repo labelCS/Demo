@@ -62,11 +62,5 @@
             #{timeLocal}
         )
     </insert>
-
-    <select id="getActiveSva" resultType="SvaModel">
-        SELECT * FROM 
-            svalist a left join svastoremap b on a.id = b.svaId 
-        WHERE a.status = 1
-    </select>
     
 </mapper>
