@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sva.dao.LocationDao">
+
+    <select id="doquery1" resultMap="locationResult">
+        SELECT a.*,b.* 
+        FROM locationphone a left join maps b on a.z = b.floorNo 
+        WHERE a.userID = #{userId} and a.z = #{floorNo}
+    </select>
+
+    <resultMap id="locationResult" type="LocationModel">
+        <result property="timestamp" column="timestamp"/>
+        <result property="dataType" column="dataType"/>
+        <result property="x" column="x"/>
+        <result property="y" column="y"/>
+        <result property="z" column="z"/>
+        <result property="userID" column="userID"/>
+        <association property="maps" javaType="MapsModel">
+            <id property="id" column="id"/>
+            <result property="floorNo" column="floorNo"/>
+            <result property="floor" column="floor"/>
+            <result property="xo" column="xo"/>
+            <result property="yo" column="yo"/>
+            <result property="scale" column="scale"/>
+            <result property="coordinate" column="coordinate"/>
+            <result property="angle" column="angle"/>
+            <result property="path" column="path"/>
+            <result property="mapId" column="mapId"/>
+            <result property="imgWidth" column="imgWidth"/>
+            <result property="imgHeight" column="imgHeight"/>
+        </association>
+    </resultMap>
+    
+    <select id="queryHeatmap" resultType="LocationModel">
+        SELECT 
+            f.userID, 
+            max(f.timestamp) timestamp, 
+            max(f.z) z,
+            max(f.dataType) dataType,
+            max(f.idType) idType,
+            max(f.x) x,
+            max(f.y) y 
+        FROM (
+            SELECT la.* 
+            FROM 
+                ${tableName} la join (
+                    SELECT a.userID, max(a.timestamp) timestamp, max(a.z) z 
+                    FROM (
+                        SELECT lb.* 
+                        FROM ${tableName} lb join (
+                            SELECT distinct(timestamp) 
+                            FROM ${tableName} 
+	                        WHERE z = #{floorNo} and timestamp &gt; #{time} 
+	                        ORDER BY timestamp desc 
+	                        LIMIT 4
+	                    ) t on lb.timestamp = t.timestamp 
+	                    WHERE z = #{floorNo} 
+                    ) a 
+                    GROUP BY a.userID
+                ) b 
+            WHERE la.timestamp= b.timestamp and la.userID = b.userID and la.z = b.z
+            ) f 
+        GROUP BY f.userID
+    </select>
+    
+    <select id="queryHeatmap5" resultType="LocationModel">
+        SELECT * 
+        FROM (
+            SELECT * 
+            FROM ${tableName}
+            WHERE z = #{floorNo}
+                and timestamp &gt; #{time}
+            ORDER BY timestamp desc
+        ) a 
+        GROUP BY a.userID
+    </select>
+    
+    <select id="queryHeatmap6" resultType="LocationModel">
+        SELECT * 
+        FROM (
+            SELECT * 
+            FROM ${tableName}
+            WHERE z = #{floorNo} 
+        ) a 
+        GROUP BY a.userID
+    </select>
+
+    <select id="queryLocationByUseId" resultType="LocationModel">
+        SELECT locationPhone.* 
+        FROM locationPhone 
+        WHERE userID = #{value}
+            and timestamp = (
+                SELECT max(timestamp) 
+                FROM locationPhone 
+                WHERE userID = #{userId}
+            )
+    </select>
+    
+    <select id="getUserId" resultType="LocationModel">
+        SELECT distinct(userID) 
+        FROM ${tableName}
+        WHERE z = #{floorNo} 
+            and timestamp &gt; #{time}
+    </select>
+    
+    <select id="getMark" resultType="LocationModel">
+        SELECT * 
+        FROM ${tableName}
+        WHERE userID = #{userId} and timestamp &gt; #{time}
+        ORDER BY timestamp
+    </select>
+    
+    <select id="queryOverData" resultType="LocationModel">
+        SELECT 
+            f.userID, 
+            max(f.timestamp) timestamp, 
+            max(f.z) z,
+            max(f.dataType) dataType,
+            max(f.idType) idType,
+            max(f.x) x,
+            max(f.y) y 
+        FROM 
+            (
+                SELECT la.* 
+                FROM ${tableName} la 
+                    join (
+                        SELECT a.userID, max(a.timestamp) timestamp, max(a.z) z 
+                        FROM (
+                            SELECT lb.* FROM ${tableName} lb join (
+                                SELECT distinct(timestamp) 
+                                FROM ${tableName}
+                                WHERE z = #{floorNo} and timestamp &gt; #{time} 
+                                ORDER BY timestamp desc limit 4
+                            ) t on lb.timestamp = t.timestamp 
+                            WHERE z = #{floorNo} 
+                        ) a 
+                        GROUP BY a.userID
+                    ) b 
+                WHERE la.timestamp= b.timestamp and la.userID = b.userID and la.z = b.z
+            ) f 
+        GROUP BY f.userID
+    </select>
+    
+    <select id="queryLocationForPosition" resultType="Map">
+        <foreach item="time" index="index" collection="timeList" separator=" union " >
+            SELECT userID 
+            FROM location${time} 
+            WHERE z = #{floorNo} and idType = 'MSISDN'
+        </foreach>
+    </select>
+    
+    <select id="queryScatterMapData" resultType="Map">
+        SELECT a.*,r.role,r.userName,r.phoneNumber 
+        FROM (
+            SELECT * FROM (
+                SELECT * FROM ${tableName}
+                WHERE z = #{floorNo} and timestamp &gt; #{time} 
+                ORDER BY timestamp desc
+            ) a 
+        GROUP BY a.userID
+        ) a left join register r on a.userID = r.userId
+    </select>
+    
+    <select id="getNumberByMinute" resultType="int">
+        SELECT count(distinct a.userID) number 
+        FROM ${tableName} a join maps b on a.z = b.floorNo 
+        WHERE b.placeId = #{placeId}
+    </select>
+    
+    <select id="getYesterdayNumber" resultType="int">
+        SELECT count(distinct a.userID) number 
+        FROM ${tableName} a join maps b on a.z = b.floorNo 
+        WHERE b.placeId = #{placeId} and a.timestamp &lt; #{time}
+    </select>
+    
+    <select id="getNowPeople" resultType="int">
+        SELECT count(distinct a.userID) number 
+        FROM ${tableName} a join maps b on a.z = b.floorNo
+        WHERE b.placeId = #{placeId} and a.timestamp &gt; #{time}
+    </select>
+</mapper>

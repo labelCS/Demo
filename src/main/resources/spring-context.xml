@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<context:property-placeholder location="classpath:db.properties"></context:property-placeholder>
+	<!-- 数据源, DBCP连接池 -->
+	<bean id="dataSource" destroy-method="close"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${mysql.driver_class}" />
+		<property name="url" value="${mysql.jdbcurl}" />
+		<property name="username" value="${mysql.user}" />
+		<property name="password" value="${mysql.password}" />
+	</bean>
+	
+	<!-- mybatis的SqlSession的工厂: SqlSessionFactoryBean -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
+		<!--dataSource属性指定要用到的连接池--> 
+		<property name="dataSource" ref="dataSource"/> 
+		<!--configLocation属性指定mybatis的核心配置文件--> 
+		<property name="configLocation" value="classpath:SqlMapConfig.xml" /> 
+		<!-- 所有配置的mapper文件 -->
+		<property name="mapperLocations" value="classpath:com/sva/dao/mapper/*.xml" />
+	</bean>
+    
+    <!-- mybatis自动扫描加载Sql映射文件/接口 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.sva.dao" />	 
+	</bean>
+	
+	<!-- 事务管理 -->
+	<bean id="txManager"  
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+        <property name="dataSource" ref="dataSource" />  
+    </bean>  
+    
+    <!-- 开启注解事务 只对当前配置文件有效 注解事务和下面的声明式事务只需选择其中一种，推荐用声明式事务 -->
+	<!-- <aop:aspectj-autoproxy expose-proxy="true"/> --> 
+	<tx:annotation-driven transaction-manager="txManager"/>
+
+</beans>

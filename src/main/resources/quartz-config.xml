@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+    xsi:schemaLocation="
+    http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd  
+    http://www.springframework.org/schema/jee 
+    http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+    
+    <!-- 线程执行器配置，用于任务注册 -->
+    <bean id="executor"
+        class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="10" />
+        <property name="maxPoolSize" value="100" />
+        <property name="queueCapacity" value="500" />
+    </bean>     
+    
+    <!-- 要调用的工作类 -->
+    <bean id="quartzJob" class="com.sva.common.QuartzJob"></bean> 
+    
+    <!--调度业务 : 定义调用对象和调用对象的方法 -->
+    <bean id="startSvaTask"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">        
+        <!-- 调用的类 -->
+        <property name="targetObject" ref="quartzJob" />        
+        <!-- 调用类中的方法 -->
+        <property name="targetMethod" value="startSva" />
+    </bean>
+    
+    <bean id="checkSvaStatusTask"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">        
+        <!-- 调用的类 -->
+        <property name="targetObject" ref="quartzJob" />        
+        <!-- 调用类中的方法 -->
+        <property name="targetMethod" value="checkSvaStatus" />
+    </bean>
+    
+    <bean id="cleanLocationTask"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <!-- 调用的类 -->
+        <property name="targetObject" ref="quartzJob" />        
+        <!-- 调用类中的方法 -->
+        <property name="targetMethod" value="cleanLocation" />
+    </bean>
+       
+    <!-- 定义触发时间 -->
+    <bean id="startSvaTimer" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="startSvaTask" />
+        <!-- 仅启动时执行 -->
+        <property name="repeatInterval" value="1000" />
+        <property name="repeatCount" value="0" />    
+    </bean>
+    
+    <bean id="checkSvaStatusTimer" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="checkSvaStatusTask" />        
+        <!-- cron表达式 -->
+        <!-- 每小时执行一次 -->
+        <property name="cronExpression" value="01 00 * * * ?" />
+    </bean> 
+    
+    <bean id="cleanLocationTimer" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="cleanLocationTask" />        
+        <!-- cron表达式 -->
+        <!-- 每晚执行一次 -->
+        <property name="cronExpression" value="01 59 23 * * ?" />
+    </bean> 
+    
+    <!--设置调度 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序 -->
+    <bean id="startQuertz" lazy-init="false" autowire="no"
+        class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="startSvaTimer" />
+                <ref bean="checkSvaStatusTimer" />
+                <ref bean="cleanLocationTimer" />
+            </list>
+        </property>
+        <property name="taskExecutor" ref="executor" />
+    </bean>
+</beans>

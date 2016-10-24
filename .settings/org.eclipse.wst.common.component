@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="SVAProject">
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java/dao"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java/model"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java/common"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java/web"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java/service"/>
+        <property name="context-root" value="SVAProject"/>
+        <property name="java-output-path" value="/SVAProject/target/classes"/>
+        <property name="context-root" value="SVAProject"/>
+    </wb-module>
+</project-modules>
