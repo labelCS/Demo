@@ -14,6 +14,15 @@
             and z = #{floorNo}
     </select>
     
+    <select id="checkSvaDataExisted" resultType="int">
+        SELECT 
+            count(distinct userID)
+        FROM 
+            location
+        WHERE 
+            time_local &gt; #{time}
+    </select>
+    
     <delete id="deleteLocation">
         DELETE FROM location
     </delete>

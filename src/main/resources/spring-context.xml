@@ -12,7 +12,6 @@
 	http://www.springframework.org/schema/context 
 	http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<context:property-placeholder location="classpath:db.properties"></context:property-placeholder>
 	<!-- 数据源, DBCP连接池 -->
 	<bean id="dataSource" destroy-method="close"
 		class="org.apache.commons.dbcp.BasicDataSource">

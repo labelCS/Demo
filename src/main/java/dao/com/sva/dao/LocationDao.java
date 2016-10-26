@@ -29,6 +29,14 @@ public interface LocationDao {
     public int findCurrentUser(@Param("floorNo")String floorNo, @Param("time")long time);
     
     /** 
+     * @Title: checkSvaDataExisted 
+     * @Description: 检查sva是否有数据
+     * @param time
+     * @return 
+     */
+    public int checkSvaDataExisted(@Param("time")long time);
+    
+    /** 
      * @Title: deleteLocation 
      * @Description: 清空location表
      * @return 

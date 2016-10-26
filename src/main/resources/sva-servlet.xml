@@ -46,15 +46,16 @@
 		<property name="suffix" value=".jsp" />
 	</bean>
 	
-	<!-- 支持后台读取配置文件 -->
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
+	<!-- 支持后台读取配置文件 
+	<bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">  
 		<property name="locations">  
 			<list>  
 				<value>classpath:db.properties</value>  
 				<value>classpath:sva.properties</value>
 			</list>  
 		</property>  
-	</bean> 	
+	</bean> 	-->
+	<context:property-placeholder location="classpath:db.properties,classpath:sva.properties"></context:property-placeholder>
 
 	<!-- 支持上传文件 -->
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
@@ -75,8 +76,6 @@
 	<mvc:interceptors>
 		<!-- 国际化操作拦截器 如果采用基于（请求/Session/Cookie）则必需配置 --> 
 	    <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />  
-	    <!-- 如果不定义 mvc:mapping path 将拦截所有的URL请求 -->
-	    <bean class="com.sva.web.auth.AuthInterceptor"></bean>
 		
 	</mvc:interceptors>
 

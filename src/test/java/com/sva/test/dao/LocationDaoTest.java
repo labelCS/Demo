@@ -8,10 +8,7 @@
  */  
 package com.sva.test.dao;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import javax.annotation.Resource;
 import org.junit.Test;
 import com.sva.dao.LocationDao;
@@ -31,90 +28,31 @@ public class LocationDaoTest extends BasicDaoTest {
     LocationDao locationDao;
 
     @Test
-    public void doquery1Test(){
-        String userId = "11111";
+    public void findCurrentUserTest(){
         String floorNo = "1";
-        List<LocationModel> result = locationDao.doquery1(userId, floorNo);
-        Assert.assertEquals("结果为0",0, result.size());
+        long time = 1212122121L;
+        int result = locationDao.findCurrentUser(floorNo,time);
+        Assert.assertEquals("结果为0",0, result);
+    }
+    
+    @Test
+    public void checkSvaDataExistedTest(){
+        long time = 1212122121L;
+        int result = locationDao.checkSvaDataExisted(time);
+        Assert.assertEquals("结果为0",0, result);
+    }
+    
+    @Test
+    public void deleteLocationTest(){
+        int result = locationDao.deleteLocation();
+        Assert.assertEquals("结果为1",1, result);
     }
     
     @Test
     public void queryHeatmapTest(){
         String floorNo = "10001";
         long time = 1111L;
-        String tableName = "location20160625";
-        List<LocationModel> result = locationDao.queryHeatmap(floorNo, time, tableName);
-        Assert.assertNotEquals("结果不为0",0, result.size());
-    }
-    
-    @Test
-    public void queryHeatmap5Test(){
-        String floorNo = "10001";
-        long time = 1111L;
-        String tableName = "location20160625";
-        List<LocationModel> result = locationDao.queryHeatmap5(floorNo, time, tableName);
-        Assert.assertNotEquals("结果不为0",0, result.size());
-    }
-    
-    @Test
-    public void queryHeatmap6Test(){
-        String floorNo = "10001";
-        String tableName = "location20160625";
-        List<LocationModel> result = locationDao.queryHeatmap6(floorNo, tableName);
-        Assert.assertNotEquals("结果不为0",0, result.size());
-    }
-    
-    @Test
-    public void queryLocationByUseIdTest(){
-        String userId = "1";
-        List<LocationModel> result = locationDao.queryLocationByUseId(userId);
-        Assert.assertEquals("结果为0",0, result.size());
-    }
-    
-    @Test
-    public void getUserIdTest(){
-        String floorNo = "1";
-        String time = "1111";
-        String tableName = "location20160625";
-        List<LocationModel> result = locationDao.getUserId(floorNo, time, tableName);
-        Assert.assertEquals("结果为0",0, result.size());
-    }
-    
-    @Test
-    public void getMarkTest(){
-        String userId = "1";
-        String time = "1111";
-        String tableName = "location20160615";
-        List<LocationModel> result = locationDao.getMark(userId, time, tableName);
-        Assert.assertEquals("结果为0",0, result.size());
-    }
-    
-    @Test
-    public void queryOverDataTest(){
-        int floorNo = 40003;
-        String time = "1111";
-        String tableName = "location20160615";
-        List<LocationModel> result = locationDao.queryOverData(floorNo, time, tableName);
-        Assert.assertNotEquals("结果不为0",0, result.size());
-    }
-    
-    @Test
-    public void queryLocationForPositionTest(){
-        String floorNo = "10001";
-        List<String> timeList = new ArrayList<String>();
-        timeList.add("20160625");
-        timeList.add("20160626");
-        timeList.add("20160627");
-        List<Map<String, Object>> result = locationDao.queryLocationForPosition(floorNo, timeList);
-        Assert.assertNotEquals("结果不为0",0, result.size());
-    }
-    
-    @Test
-    public void queryScatterMapDataTest(){
-        String floorNo = "10001";
-        long time = 1111L;
-        String tableName = "location20160625";
-        List<Map<String, Object>> result = locationDao.queryScatterMapData(floorNo,time, tableName);
+        List<LocationModel> result = locationDao.queryHeatmap(floorNo, time);
         Assert.assertNotEquals("结果不为0",0, result.size());
     }
 }

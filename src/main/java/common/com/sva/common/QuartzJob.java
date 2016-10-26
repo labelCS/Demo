@@ -19,6 +19,7 @@ public class QuartzJob {
      */
     public void startSva(){
         LOG.debug("执行SVA初始对接");
+        service.initParams();
         service.subscribeSva();
     }
     

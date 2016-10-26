@@ -1,35 +1,25 @@
 package com.sva.common.conf;
 
-import org.springframework.beans.factory.annotation.Value;
 import com.sva.service.AmqpThread;
 
 public abstract class GlobalConf
 {
-    @Value("${sva_ip}")
     public static String svaIp;
     
-    @Value("${sva_token_port}")
     public static String tokenPort;
     
-    @Value("${sva_broker_port}")
     public static String brokerPort;
     
-    @Value("${sva_type}")
     public static int type;
     
-    @Value("${app_name}")
     public static String appName;
     
-    @Value("${app_password}")
     public static String appPassword;
     
-    @Value("${sva_id_specific}")
     public static int isSpecific;
     
-    @Value("${sva_id_type}")
     public static String idType;
     
-    @Value("${sva_id_type}")
     public static String floorNo;
     
     /**
